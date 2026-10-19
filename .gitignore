@@ -1,0 +1,16 @@
+# 注意：本仓库**有意提交** dsh-startup-secret-*.tgz（用户要求 clone 下来即可安装）。
+# 因此这里不忽略 tgz —— 发版时把新包的 tgz 一并提交。
+
+# 操作系统 / 编辑器杂物
+.DS_Store
+Thumbs.db
+desktop.ini
+*.swp
+*~
+
+# 临时产物与日志
+*.log
+*.tmp
+_upload/
+.pnpm-debug.log*
+node_modules/

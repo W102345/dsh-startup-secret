@@ -1,0 +1,28 @@
+# 换行符 / 编码策略：保证跨设备安装.sh和.cmd都能正常工作
+#
+# ── Windows 批处理（.cmd / .bat）────────────────────────────────
+# 必须满足两条，否则在"别的机器"上会静默失败：
+#   1) 换行符 = CRLF。cmd.exe 解析多行 if (...) / for %%f in (...) 块时
+#      依赖 CRLF；纯 LF 在部分 Windows 版本上会把整块当成一行。
+#   2) 编码 = GBK(936)，即简体中文 Windows 的默认控制台码页。
+#      本机实测：同样内容存成 UTF-8 时，cmd.exe 按字节数定位下一行会
+#      丢失同步 —— 表现为 echo 被吞掉、下一行被当外部命令执行、
+#      变量被吃（%PROFILE% 消失）。存成 GBK 则完全正常。
+#      （加 chcp 65001 不能解决，反而更容易触发，故脚本内不写 chcp。）
+# 因此这里显式声明 -text：禁止 Git 做任何换行/编码规范化，避免
+# 仓库往返一趟后被改回 UTF-8/LF 而失效。
+*.cmd  -text
+*.bat  -text
+
+# ── Shell 脚本 ──────────────────────────────────────────────────
+# 必须 LF：CRLF 会让 shebang 变成 "#!/bin/sh\r"，
+# 在 Linux/macOS 上报 "bad interpreter"。
+*.sh   text eol=lf
+
+# ── 二进制资产：不做任何转换 ────────────────────────────────────
+*.tgz  binary
+*.mp3  binary
+*.webp binary
+*.png  binary
+*.jpg  binary
+*.ico  binary
